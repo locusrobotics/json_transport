@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 
-#include "json_conversions/json_conversions.hpp"
+#include "json_transport/json_transport.hpp"
 
 int main(int argc, char **argv)
 {
@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 
   auto data = R"(
     {
-      "hello this is json": 42
+      "hello_this_is_json": 42
     }
   )"_json;
 

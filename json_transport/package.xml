@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>json_conversions</name>
+  <name>json_transport</name>
   <version>0.0.0</version>
-  <description>JSON ROS conversions</description>
+  <description>JSON transport for ROS</description>
 
   <author email="pbovbel@locusrobotics.com">Paul Bovbel</author>
   <maintainer email="pbovbel@locusrobotics.com">Paul Bovbel</maintainer>
@@ -11,7 +11,13 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>catkin_virtualenv</build_depend>
+
   <depend>json_msgs</depend>
   <depend>roscpp</depend>
+
+  <export>
+    <pip_requirements>requirements.txt</pip_requirements>
+  </export>
 
 </package>

@@ -87,7 +87,7 @@ struct Serializer<nlohmann::json>
 
   inline static uint32_t serializedLength(const nlohmann::json& json)
   {
-    return nlohmann::json::to_ubjson(json).size();
+    return nlohmann::json::from_ubjson(json).size();
   }
 };
 
