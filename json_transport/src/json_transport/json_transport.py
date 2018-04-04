@@ -1,21 +1,17 @@
 import rospy
 import ubjson
 
-from json_msg import msg as json_msg
+from json_msgs import msg as json_msg
 
 
 class Publisher(rospy.Publisher):
 
     def __init__(self, *args, **kwargs):
-        try:
-            args[2] = 'json_msgs/Json'
-        except IndexError:
-            kwargs['data_class'] = 'json_msgs/Json'
-
+        args = list(args)
+        args.insert(1, json_msg.Json)
         super(Publisher, self).__init__(*args, **kwargs)
 
     def publish(self, *args, **kwargs):
-        # encoded = ubjson.dumpb({u'a': 1})
         if len(args) == 1:
             data = args[0]
         elif kwargs:
@@ -31,6 +27,9 @@ class Publisher(rospy.Publisher):
 class Subscriber(rospy.Subscriber):
 
     def __init__(self, *args, **kwargs):
+        args = list(args)
+        args.insert(1, json_msg.Json)
+
         try:
             callback = args[2]
             args[2] = _wrap_callback(callback)

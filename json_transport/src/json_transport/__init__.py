@@ -1,1 +1,1 @@
-from json_transport import JsonPublisher, JsonSubscriber
+from json_transport import Publisher, Subscriber

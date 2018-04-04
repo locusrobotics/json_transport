@@ -9,5 +9,5 @@ def callback(data):
 
 if __name__ == '__main__':
     rospy.init_node('listener', anonymous=True)
-    json_transport.Subscriber('json', callback)
+    json_transport.Subscriber('json', callback=callback)
     rospy.spin()
