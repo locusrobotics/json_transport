@@ -6,19 +6,6 @@
 
 ROS_STATIC_ASSERT(sizeof(nlohmann::json) == 16);
 
-// namespace json_msgs
-// {
-//
-// void to_json(nlohmann::json& json, const Json& msg) {
-//   json = nlohmann::json::from_ubjson(msg.data);
-// }
-//
-// void from_json(const nlohmann::json& json, Json& msg) {
-//   msg.data = nlohmann::json::to_ubjson(json);
-// }
-//
-// }
-
 namespace ros
 {
 namespace message_traits
