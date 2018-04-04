@@ -2,15 +2,22 @@
 
 #include "json_conversions/json_conversions.hpp"
 
+void callback(const nlohmann::json& data)
+{
+  ROS_INFO_STREAM("Received " << data);
+}
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "json_listener");
 
   ros::NodeHandle nh;
 
-  auto data = ros::topic::waitForMessage<nlohmann::json>("json");
+  // nlohmann::json data = ros::topic::waitForMessage<nlohmann::json>("json");
+  // ROS_INFO_STREAM("Received " << data);
 
-  ROS_INFO_STREAM("Received " << data << " sizeof " << sizeof(data));
+  ros::Subscriber sub = nh.subscribe("json", 1, callback );
+  ros::spin();
 
   return 0;
 }

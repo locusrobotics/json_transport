@@ -6,18 +6,18 @@
 
 ROS_STATIC_ASSERT(sizeof(nlohmann::json) == 16);
 
-namespace json_msgs
-{
-
-void to_json(nlohmann::json& json, const Json& msg) {
-  json = nlohmann::json::from_ubjson(msg.data);
-}
-
-void from_json(const nlohmann::json& json, Json& msg) {
-  msg.data = nlohmann::json::to_ubjson(json);
-}
-
-}
+// namespace json_msgs
+// {
+//
+// void to_json(nlohmann::json& json, const Json& msg) {
+//   json = nlohmann::json::from_ubjson(msg.data);
+// }
+//
+// void from_json(const nlohmann::json& json, Json& msg) {
+//   msg.data = nlohmann::json::to_ubjson(json);
+// }
+//
+// }
 
 namespace ros
 {
@@ -36,9 +36,9 @@ struct MD5Sum<nlohmann::json>
     return MD5Sum<json_msgs::Json>::value();
   }
 
-  static const char* value(const nlohmann::json& m)
+  static const char* value(const nlohmann::json&)
   {
-    return MD5Sum<json_msgs::Json>::value(m);
+    return value();
   }
 };
 
@@ -50,9 +50,9 @@ struct DataType<nlohmann::json>
     return DataType<json_msgs::Json>::value();
   }
 
-  static const char* value(const nlohmann::json& m)
+  static const char* value(const nlohmann::json&)
   {
-    return DataType<json_msgs::Json>::value(m);
+    return value();
   }
 };
 
@@ -80,14 +80,21 @@ struct Serializer<nlohmann::json>
   template<typename Stream>
   inline static void write(Stream& stream, const nlohmann::json& json)
   {
-    stream.next(nlohmann::json::to_ubjson(json));
+    auto data = nlohmann::json::to_ubjson(json);
+    for (auto const & byte : data)
+    {
+      stream.next(byte);
+    }
   }
 
   template<typename Stream>
   inline static void read(Stream& stream, nlohmann::json& json)
   {
-    std::vector<std::uint8_t> data;
-    stream.next(data);
+    std::vector<std::uint8_t> data(stream.getLength());
+    for (auto & byte : data)
+    {
+      stream.next(byte);
+    }
     json = nlohmann::json::from_ubjson(data);
   }
 

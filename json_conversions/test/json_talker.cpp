@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     }
   )"_json;
 
-  ROS_INFO_STREAM("Publishing " << data << " sizeof " << sizeof(data));
+  ROS_INFO_STREAM("Publishing " << data);
 
   publisher.publish(data);
 
