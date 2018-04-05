@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+import json
+import json_transport
+import rospy
+import rostest
+import sys
+import threading
+import unittest
+
+from functools import partial
+
+
+class TestListener(unittest.TestCase):
+
+    def __init__(self, *args):
+        super(TestListener, self).__init__(*args)
+
+    def callback(self, receive_data, event):
+        # rospy.loginfo("Received {}".format(data))
+        self.receive_data = receive_data
+        event.set()
+
+    def test_listen(self):
+        receive_event = threading.Event()
+        json_transport.Subscriber('json', callback=partial(self.callback, event=receive_event))
+        receive_event.wait(3)
+
+        data = json.loads(rospy.get_param("test_data"))
+
+        self.assertEquals(data, self.receive_data)
+
+
+if __name__ == '__main__':
+    rospy.init_node('test_listener_py')
+    rostest.rosrun('json_transport', 'test_listener_py', TestListener, sys.argv)

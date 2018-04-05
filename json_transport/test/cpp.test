@@ -4,12 +4,12 @@
   <rosparam>
     test_data: |
       {
-        "hello_this_is_json": 42
+        "hello_this_is_json": 25
       }
   </rosparam>
 
-  <node name="talker" pkg="json_transport" type="json_talker" />
+  <node name="talker" pkg="json_transport" type="talker_cpp" />
 
-  <test test-name="test_listener_cpp" pkg="json_transport" type="json_listener_cpp" />
-  <!-- <test test-name="test_listener_py" pkg="json_transport" type="json_listener_py" /> -->
+  <test test-name="test_listener_cpp" pkg="json_transport" type="test_listener_cpp" />
+  <!-- <test test-name="test_listener_py" pkg="json_transport" type="test_listener_py" /> -->
 </launch>

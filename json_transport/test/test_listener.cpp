@@ -12,6 +12,7 @@ TEST(TestSuite, listen_test)
   auto data = nlohmann::json::parse(data_string);
 
   boost::shared_ptr<const nlohmann::json> received = ros::topic::waitForMessage<nlohmann::json>("json");
+  ROS_INFO_STREAM("Received " << *received);
 
   EXPECT_EQ(data, *received);
 }
