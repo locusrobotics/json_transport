@@ -38,46 +38,49 @@ namespace ros
 namespace message_traits
 {
 
+typedef nlohmann::json json_t;
+typedef json_msgs::Json json_msg_t;
+
 template<>
-struct MD5Sum<nlohmann::json>
+struct MD5Sum<json_t>
 {
   static const char* value()
   {
-    // Ensure that if the definition of json_msgs::Json changes we have a compile error here.
-    ROS_STATIC_ASSERT(MD5Sum<json_msgs::Json>::static_value1 == 0xc55cc30de2de2e48ULL);
-    ROS_STATIC_ASSERT(MD5Sum<json_msgs::Json>::static_value2 == 0x3336fe2549c9f941ULL);
-    return MD5Sum<json_msgs::Json>::value();
+    // Ensure that if the definition of json_msg_t changes we have a compile error here.
+    ROS_STATIC_ASSERT(MD5Sum<json_msg_t>::static_value1 == 0xc55cc30de2de2e48ULL);
+    ROS_STATIC_ASSERT(MD5Sum<json_msg_t>::static_value2 == 0x3336fe2549c9f941ULL);
+    return MD5Sum<json_msg_t>::value();
   }
 
-  static const char* value(const nlohmann::json&)
+  static const char* value(const json_t&)
   {
     return value();
   }
 };
 
 template<>
-struct DataType<nlohmann::json>
+struct DataType<json_t>
 {
   static const char* value()
   {
-    return DataType<json_msgs::Json>::value();
+    return DataType<json_msg_t>::value();
   }
 
-  static const char* value(const nlohmann::json&)
+  static const char* value(const json_t&)
   {
     return value();
   }
 };
 
 template<>
-struct Definition<nlohmann::json>
+struct Definition<json_t>
 {
   static const char* value()
   {
-    return Definition<json_msgs::Json>::value();
+    return Definition<json_msg_t>::value();
   }
 
-  static const char* value(const nlohmann::json&)
+  static const char* value(const json_t&)
   {
     return value();
   }
@@ -88,23 +91,23 @@ namespace serialization
 {
 
 template<>
-struct Serializer<nlohmann::json>
+struct Serializer<json_t>
 {
   template<typename Stream>
-  inline static void write(Stream& stream, const nlohmann::json& json)
+  inline static void write(Stream& stream, const json_t& json)
   {
     stream.next(json.dump());
   }
 
   template<typename Stream>
-  inline static void read(Stream& stream, nlohmann::json& json)
+  inline static void read(Stream& stream, json_t& json)
   {
     std::string data;
     stream.next(data);
-    json = nlohmann::json::parse(data);
+    json = json_t::parse(data);
   }
 
-  inline static uint32_t serializedLength(const nlohmann::json& json)
+  inline static uint32_t serializedLength(const json_t& json)
   {
     return json.dump().size() + 4;
   }

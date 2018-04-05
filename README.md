@@ -1,5 +1,7 @@
 # json_transport
 
+Providing schemaless transport over ROS pub/sub via JSON. This is useful when schema is enforced elsewhere, or the data is truly schemaless (i.e. parameters, diagnostics).
+
 ## C++
 
 The provided adapters allows publishing and subscribing [`nlohmann::json`](https://github.com/nlohmann/json) datatypes.
