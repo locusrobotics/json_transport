@@ -14,6 +14,8 @@ class Publisher(rospy.Publisher):
     def publish(self, *args, **kwargs):
         if len(args) == 1:
             data = args[0]
+        elif args:
+            data = args
         elif kwargs:
             data = kwargs
         else:
