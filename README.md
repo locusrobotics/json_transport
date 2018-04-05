@@ -1,10 +1,8 @@
 # json_transport
 
-Small wrappers to publish JSON data in roscpp and rospy.
-
 ## C++
 
-The provided adapters allows natively publishing and subscribing [`nlohmann::json`](https://github.com/nlohmann/json) datatypes.
+The provided adapters allows publishing and subscribing [`nlohmann::json`](https://github.com/nlohmann/json) datatypes.
 
 ```
 #include "json_transport/json_transport.hpp"
@@ -27,7 +25,7 @@ assert(*received == sent);
 
 ## Python
 
-The provided adapters allow publishing anything that can be serialized/deserialized natively via the stdlib `json` module.
+The provided adapters allow publishing and subscribing anything that can be serialized/deserialized natively via the stdlib `json` module.
 
 ```
 import json_transport
@@ -44,7 +42,6 @@ def callback(self, receive):
   pass
 
 json_transport.Subscriber('json', callback=callback)
-
 ```
 
 ## Notes
