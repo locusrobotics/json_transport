@@ -10,11 +10,9 @@ int main(int argc, char **argv)
 
   auto publisher = nh.advertise<nlohmann::json>("json", 1000, true);
 
-  auto data = R"(
-    {
-      "hello_this_is_json": 42
-    }
-  )"_json;
+  std::string data_string;
+  nh.getParam("test_data", data_string);
+  auto data = nlohmann::json::parse(data_string);
 
   ROS_INFO_STREAM("Publishing " << data);
 

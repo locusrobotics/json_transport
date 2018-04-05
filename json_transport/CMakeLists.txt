@@ -30,15 +30,15 @@ if(CATKIN_ENABLE_TESTING)
 
   catkin_install_python(
   PROGRAMS
-    test/json_talker_dict.py
-    test/json_talker_inline.py
-    test/json_listener.py
+    test/json_talker_dict_py
+    test/json_talker_inline_py
+    test/json_listener_py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-  add_executable(json_talker test/json_talker.cpp)
-  target_link_libraries(json_talker ${catkin_LIBRARIES})
+  add_executable(json_talker_cpp test/json_talker.cpp)
+  target_link_libraries(json_talker_cpp ${catkin_LIBRARIES})
 
-  add_executable(json_listener test/json_listener.cpp)
-  target_link_libraries(json_listener ${catkin_LIBRARIES})
+  catkin_add_executable_with_gtest(json_listener_cpp test/json_listener.cpp)
+  target_link_libraries(json_listener_cpp ${catkin_LIBRARIES})
 
 endif()

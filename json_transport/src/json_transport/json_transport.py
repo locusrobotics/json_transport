@@ -47,6 +47,7 @@ class Subscriber(rospy.Subscriber):
 
 def _wrap_callback(callback):
     def wrapped(msg, cb_args=None):
+        raise Exception(msg)
         data = ubjson.loadb(msg.bytes)
         if cb_args is not None:
             callback(data, cb_args)

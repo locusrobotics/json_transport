@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+  <rosparam>
+    test_data: |
+      {
+        "hello_this_is_json": 42
+      }
+  </rosparam>
+
+  <node name="talker" pkg="json_transport" type="json_talker" />
+
+  <test test-name="test_listener_cpp" pkg="json_transport" type="json_listener_cpp" />
+  <!-- <test test-name="test_listener_py" pkg="json_transport" type="json_listener_py" /> -->
+</launch>
