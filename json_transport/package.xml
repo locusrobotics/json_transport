@@ -38,10 +38,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>catkin_virtualenv</build_depend>
+
   <depend>json_msgs</depend>
   <depend>roscpp</depend>
 
   <test_depend>roslint</test_depend>
   <test_depend>rostest</test_depend>
+
+  <export>
+    <pip_requirements>requirements.txt</pip_requirements>
+  </export>
 
 </package>

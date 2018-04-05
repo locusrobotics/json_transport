@@ -1,1 +1,1 @@
-string bytes
+uint8[] bytes

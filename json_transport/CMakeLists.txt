@@ -3,7 +3,7 @@ project(json_transport)
 
 set_directory_properties(PROPERTIES COMPILE_OPTIONS "-std=c++14;-Wall;-Werror")
 
-find_package(catkin REQUIRED COMPONENTS json_msgs roscpp)
+find_package(catkin REQUIRED COMPONENTS json_msgs roscpp catkin_virtualenv)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
@@ -25,6 +25,8 @@ if(CATKIN_ENABLE_TESTING)
   find_package(roslint)
   roslint_cpp()
   roslint_python()
+
+  catkin_generate_virtualenv()
 
   catkin_install_python(
   PROGRAMS

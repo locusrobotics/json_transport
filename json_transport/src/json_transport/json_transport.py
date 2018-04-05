@@ -24,7 +24,7 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import rospy
-import json
+import ubjson
 
 from json_msgs import msg as json_msg
 
@@ -47,7 +47,7 @@ class Publisher(rospy.Publisher):
             super(Publisher, self).publish(*args, **kwargs)
 
         msg = json_msg.Json()
-        msg.bytes = json.dumps(data)
+        msg.bytes = ubjson.dumpb(data)
         super(Publisher, self).publish(msg)
 
 
@@ -74,7 +74,7 @@ class Subscriber(rospy.Subscriber):
 
 def _wrap_callback(callback):
     def wrapped(msg, cb_args=None):
-        data = json.loads(msg.bytes)
+        data = ubjson.loadb(msg.bytes)
         if cb_args is not None:
             callback(data, cb_args)
         else:
