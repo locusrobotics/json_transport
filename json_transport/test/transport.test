@@ -28,12 +28,20 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <launch>
 
+  <arg name="talker" />
+
   <rosparam>
     test_data: '{"test": 12.1, "other_test:": "fsa", "this is a list": [12, 42, "asdf"]}'
   </rosparam>
 
-  <node name="talker" pkg="json_transport" type="talker_inline_py" />
+  <group if="$(eval arg('talker') == 'python')" >
+    <node name="talker" pkg="json_transport" type="talker_inline_py" />
+  </group>
 
-  <!-- <test test-name="test_listener_cpp" pkg="json_transport" type="test_listener_cpp" /> -->
+  <group if="$(eval arg('talker') == 'cpp')" >
+    <node name="talker" pkg="json_transport" type="talker_cpp" />
+  </group>
+
+  <test test-name="test_listener_cpp" pkg="json_transport" type="test_listener_cpp" />
   <test test-name="test_listener_py" pkg="json_transport" type="test_listener_py" />
 </launch>

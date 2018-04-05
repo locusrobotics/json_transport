@@ -3,7 +3,7 @@ project(json_transport)
 
 set_directory_properties(PROPERTIES COMPILE_OPTIONS "-std=c++14;-Wall;-Werror")
 
-find_package(catkin REQUIRED COMPONENTS json_msgs roscpp catkin_virtualenv)
+find_package(catkin REQUIRED COMPONENTS json_msgs roscpp)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
@@ -26,8 +26,6 @@ if(CATKIN_ENABLE_TESTING)
   roslint_cpp()
   roslint_python()
 
-  catkin_generate_virtualenv()
-
   catkin_install_python(
   PROGRAMS
     test/talker_dict_py
@@ -42,7 +40,7 @@ if(CATKIN_ENABLE_TESTING)
   target_link_libraries(test_listener_cpp ${catkin_LIBRARIES})
 
   find_package(rostest)
-  add_rostest(test/talker_cpp.test)
-  add_rostest(test/talker_py.test)
+  add_rostest(test/transport.test ARGS talker:=python)
+  add_rostest(test/transport.test ARGS talker:=cpp)
 
 endif()

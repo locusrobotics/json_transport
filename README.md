@@ -50,4 +50,3 @@ json_transport.Subscriber('json', callback=callback)
 ## Notes
 
 - `rospy` doesn't allow type masquerading, but there should be away to deserialize without an intermediary representation using [`rospy.AnyMsg`](http://docs.ros.org/api/rospy/html/rospy.msg.AnyMsg-class.html). Documentation is sparse.
-- `nlohmann::json` supports binary formats (CBOR, MessagePack, and UBJSON) which would make transport and serialization/deserialization more efficient. For some reason I'm unable to get any of those working with their python library equivalents (cbor2, msgpack, and ubjson) due to `nlohmann::json` not generating a 4-byte object header.
