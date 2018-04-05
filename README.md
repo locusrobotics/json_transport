@@ -35,11 +35,12 @@ rospy.init_node('json_talker')
 pub = json_transport.Publisher('json', queue_size=1, latch=True)
 pub.publish(1)
 pub.publish([1, 2, 3])
-pub.publish({'a': 1, 'b': 2, 'c': 3]
+pub.publish({'a': 1, 'b': 2, 'c': 3})
+pub.publish(a=1, b=2, c=3)
 
 
-def callback(self, receive):
-  pass
+def callback(self, data):
+  assert data == {'a': 1, 'b': 2, 'c': 3}
 
 json_transport.Subscriber('json', callback=callback)
 ```
