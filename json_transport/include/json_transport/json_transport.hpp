@@ -44,8 +44,8 @@ struct MD5Sum<nlohmann::json>
   static const char* value()
   {
     // Ensure that if the definition of json_msgs::Json changes we have a compile error here.
-    // ROS_STATIC_ASSERT(MD5Sum<json_msgs::Json>::static_value1 == 0x4a842b65f413084dULL);
-    // ROS_STATIC_ASSERT(MD5Sum<json_msgs::Json>::static_value2 == 0xc2b10fb484ea7f17ULL);
+    ROS_STATIC_ASSERT(MD5Sum<json_msgs::Json>::static_value1 == 0xc55cc30de2de2e48ULL);
+    ROS_STATIC_ASSERT(MD5Sum<json_msgs::Json>::static_value2 == 0x3336fe2549c9f941ULL);
     return MD5Sum<json_msgs::Json>::value();
   }
 
