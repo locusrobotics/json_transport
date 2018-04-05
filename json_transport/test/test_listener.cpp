@@ -36,9 +36,9 @@ TEST(TestSuite, listen_test)
 
   std::string data_string;
   nh.getParam("test_data", data_string);
-  auto data = nlohmann::json::parse(data_string);
+  auto data = json_transport::json_t::parse(data_string);
 
-  boost::shared_ptr<const nlohmann::json> received = ros::topic::waitForMessage<nlohmann::json>("json");
+  boost::shared_ptr<const json_transport::json_t> received = ros::topic::waitForMessage<json_transport::json_t>("json");
   ROS_INFO_STREAM("Received " << *received);
 
   EXPECT_EQ(data, *received);

@@ -35,11 +35,11 @@ int main(int argc, char **argv)
 
   ros::NodeHandle nh;
 
-  auto publisher = nh.advertise<nlohmann::json>("json", 1000, true);
+  auto publisher = nh.advertise<json_transport::json_t>("json", 1000, true);
 
   std::string data_string;
   nh.getParam("test_data", data_string);
-  auto data = nlohmann::json::parse(data_string);
+  auto data = json_transport::json_t::parse(data_string);
 
   ROS_INFO_STREAM("Publishing " << data);
 

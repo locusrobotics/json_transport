@@ -17,10 +17,10 @@ auto sent = R"(
 )"_json;
 
 ros::NodeHandle nh;
-auto publisher = nh.advertise<nlohmann::json>("json", 1);
+auto publisher = nh.advertise<json_transport::json_t>("json", 1);
 publisher.publish(sent);
 
-boost::shared_ptr<const nlohmann::json> received = ros::topic::waitForMessage<nlohmann::json>("json");
+boost::shared_ptr<const json_transport::json_t> received = ros::topic::waitForMessage<json_transport::json_t>("json");
 
 assert(*received == sent);
 ```
