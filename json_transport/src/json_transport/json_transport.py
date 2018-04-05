@@ -1,5 +1,5 @@
 import rospy
-import ubjson
+import json
 
 from json_msgs import msg as json_msg
 
@@ -20,7 +20,7 @@ class Publisher(rospy.Publisher):
             super(Publisher, self).publish(*args, **kwargs)
 
         msg = json_msg.Json()
-        msg.bytes = ubjson.dumpb(data)
+        msg.bytes = json.dumps(data)
         super(Publisher, self).publish(msg)
 
 
@@ -47,7 +47,7 @@ class Subscriber(rospy.Subscriber):
 
 def _wrap_callback(callback):
     def wrapped(msg, cb_args=None):
-        data = ubjson.loadb(msg.bytes)
+        data = json.loads(msg.bytes)
         if cb_args is not None:
             callback(data, cb_args)
         else:

@@ -66,27 +66,20 @@ struct Serializer<nlohmann::json>
   template<typename Stream>
   inline static void write(Stream& stream, const nlohmann::json& json)
   {
-    auto bytes = nlohmann::json::to_ubjson(json);
-    for (auto const & byte : bytes)
-    {
-      stream.next(byte);
-    }
+    stream.next(json.dump());
   }
 
   template<typename Stream>
   inline static void read(Stream& stream, nlohmann::json& json)
   {
-    std::vector<std::uint8_t> bytes(stream.getLength());
-    for (auto & byte : bytes)
-    {
-      stream.next(byte);
-    }
-    json = nlohmann::json::from_ubjson(bytes);
+    std::string data;
+    stream.next(data);
+    json = nlohmann::json::parse(data);
   }
 
   inline static uint32_t serializedLength(const nlohmann::json& json)
   {
-    return nlohmann::json::to_ubjson(json).size();
+    return json.dump().size() + 4;
   }
 };
 

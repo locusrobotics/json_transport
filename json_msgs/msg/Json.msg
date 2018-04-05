@@ -1,1 +1,1 @@
-char[] bytes
+string bytes

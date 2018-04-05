@@ -8,6 +8,6 @@ if __name__ == '__main__':
     pub = json_transport.Publisher('json', queue_size=1, latch=True)
 
     data = json.loads(rospy.get_param("test_data"))
-
+    print("Publishing " + str(data))
     pub.publish(**data)
     rospy.spin()
