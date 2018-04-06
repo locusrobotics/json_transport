@@ -40,7 +40,7 @@ if(CATKIN_ENABLE_TESTING)
   target_link_libraries(test_listener_cpp ${catkin_LIBRARIES})
 
   find_package(rostest)
-  add_rostest(test/talker_cpp.test)
-  add_rostest(test/talker_py.test)
+  add_rostest(test/transport.test ARGS talker:=python)
+  add_rostest(test/transport.test ARGS talker:=cpp)
 
 endif()

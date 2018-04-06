@@ -50,8 +50,8 @@ struct MD5Sum<json_transport::json_t>
   static const char* value()
   {
     // Ensure that if the definition of json_msg_t changes we have a compile error here.
-    ROS_STATIC_ASSERT(MD5Sum<json_transport::json_msg_t>::static_value1 == 0xc55cc30de2de2e48ULL);
-    ROS_STATIC_ASSERT(MD5Sum<json_transport::json_msg_t>::static_value2 == 0x3336fe2549c9f941ULL);
+    ROS_STATIC_ASSERT(MD5Sum<json_transport::json_msg_t>::static_value1 == 0xd159f2bd8169d3b3ULL);
+    ROS_STATIC_ASSERT(MD5Sum<json_transport::json_msg_t>::static_value2 == 0x339e6f1fce045c6dULL);
     return MD5Sum<json_transport::json_msg_t>::value();
   }
 
@@ -99,20 +99,21 @@ struct Serializer<json_transport::json_t>
   template<typename Stream>
   inline static void write(Stream& stream, const json_transport::json_t& json)
   {
-    stream.next(json.dump());
+    std::vector<std::uint8_t> bytes = json_transport::json_t::to_msgpack(json);
+    ros::serialization::serialize(stream, bytes);
   }
 
   template<typename Stream>
   inline static void read(Stream& stream, json_transport::json_t& json)
   {
-    std::string data;
-    stream.next(data);
-    json = json_transport::json_t::parse(data);
+    std::vector<std::uint8_t> bytes(stream.getLength() - 4);
+    ros::serialization::deserialize(stream, bytes);
+    json = json_transport::json_t::from_msgpack(bytes);
   }
 
   inline static uint32_t serializedLength(const json_transport::json_t& json)
   {
-    return json.dump().size() + 4;
+    return json_transport::json_t::to_msgpack(json).size() + 4;
   }
 };
 
