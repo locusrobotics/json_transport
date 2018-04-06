@@ -49,9 +49,6 @@ struct MD5Sum<json_transport::json_t>
 {
   static const char* value()
   {
-    // Ensure that if the definition of json_msg_t changes we have a compile error here.
-    ROS_STATIC_ASSERT(MD5Sum<json_transport::json_msg_t>::static_value1 == 0xd159f2bd8169d3b3ULL);
-    ROS_STATIC_ASSERT(MD5Sum<json_transport::json_msg_t>::static_value2 == 0x339e6f1fce045c6dULL);
     return MD5Sum<json_transport::json_msg_t>::value();
   }
 
