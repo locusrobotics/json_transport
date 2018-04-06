@@ -22,10 +22,10 @@ json_transport::json_t sent = {
 };
 
 ros::NodeHandle nh;
-auto publisher = nh.advertise<json_transport::json_t>("json", 1);
+auto publisher = nh.advertise<json_transport::json_t>("json", 1, true);
 publisher.publish(sent);
 
-boost::shared_ptr<const json_transport::json_t> received = ros::topic::waitForMessage<json_transport::json_t>("json");
+auto received = ros::topic::waitForMessage<json_transport::json_t>("json");
 
 assert(*received == sent);
 ```
