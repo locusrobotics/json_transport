@@ -1,0 +1,29 @@
+# This config file for Travis CI utilizes ros-industrial/industrial_ci package.
+# For more info for the package, see https://github.com/ros-industrial/industrial_ci/blob/master/README.rst
+
+sudo: required
+dist: trusty
+services:
+  - docker
+language: generic
+compiler:
+  - gcc
+notifications:
+  email:
+    recipients:
+      - pbovbel@locusrobotics.com
+env:
+  global:
+    - ROS_PARALLEL_JOBS=-j1
+    - ROS_PARALLEL_TEST_JOBS=-j1
+  matrix:
+    - ROS_DISTRO="kinetic"
+    - ROS_DISTRO="lunar"
+    - ROS_DISTRO="kinetic" OS_NAME=debian OS_CODE_NAME=jessie
+before_script:
+  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+script:
+  - source .ci_config/travis.sh
+branches:
+  only:
+  - devel
