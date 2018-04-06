@@ -100,20 +100,26 @@ struct Serializer<json_transport::json_t>
   inline static void write(Stream& stream, const json_transport::json_t& json)
   {
     std::vector<std::uint8_t> bytes = json_transport::json_t::to_msgpack(json);
-    ros::serialization::serialize(stream, bytes);
+    for (auto const & byte : bytes)
+    {
+      stream.next(byte);
+    }
   }
 
   template<typename Stream>
   inline static void read(Stream& stream, json_transport::json_t& json)
   {
-    std::vector<std::uint8_t> bytes(stream.getLength() - 4);
-    ros::serialization::deserialize(stream, bytes);
+    std::vector<std::uint8_t> bytes(stream.getLength());
+    for (auto & byte : bytes)
+    {
+      stream.next(byte);
+    }
     json = json_transport::json_t::from_msgpack(bytes);
   }
 
   inline static uint32_t serializedLength(const json_transport::json_t& json)
   {
-    return json_transport::json_t::to_msgpack(json).size() + 4;
+    return json_transport::json_t::to_msgpack(json).size();
   }
 };
 

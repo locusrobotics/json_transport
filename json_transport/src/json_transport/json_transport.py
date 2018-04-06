@@ -23,60 +23,28 @@
 # DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import rospy
 import msgpack
-
+import rospy
 from json_msgs import msg as json_msg
 
 
-class Publisher(rospy.Publisher):
+class PackedJson(rospy.msg.AnyMsg):
+
+    _md5sum = json_msg.Json._md5sum
+    _type = json_msg.Json._type
 
     def __init__(self, *args, **kwargs):
-        args = list(args)
-        args.insert(1, json_msg.Json)
-        super(Publisher, self).__init__(*args, **kwargs)
-
-    def publish(self, *args, **kwargs):
         if len(args) == 1:
-            data = args[0]
+            self.data = args[0]
         elif args:
-            data = args
+            self.data = args
         elif kwargs:
-            data = kwargs
-        else:
-            super(Publisher, self).publish(*args, **kwargs)
+            self.data = kwargs
 
-        msg = json_msg.Json()
-        msg.bytes = msgpack.packb(data)
-        super(Publisher, self).publish(msg)
+    def set_data(self, data):
+        self._buff = msgpack.packb(data)
 
+    def get_data(self):
+        return msgpack.unpackb(self._buff)
 
-class Subscriber(rospy.Subscriber):
-
-    def __init__(self, *args, **kwargs):
-        args = list(args)
-        args.insert(1, json_msg.Json)
-
-        try:
-            callback = args[2]
-            args[2] = _wrap_callback(callback)
-        except IndexError:
-            pass
-
-        try:
-            callback = kwargs['callback']
-            kwargs['callback'] = _wrap_callback(callback)
-        except KeyError:
-            pass
-
-        super(Subscriber, self).__init__(*args, **kwargs)
-
-
-def _wrap_callback(callback):
-    def wrapped(msg, cb_args=None):
-        data = msgpack.unpackb(msg.bytes)
-        if cb_args is not None:
-            callback(data, cb_args)
-        else:
-            callback(data)
-    return wrapped
+    data = property(get_data, set_data)
