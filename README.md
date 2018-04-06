@@ -44,8 +44,7 @@ pub.publish(1)
 pub.publish([1, 2, 3])
 pub.publish({'a': 1, 'b': 2, 'c': 3})
 
-def callback(msg):
-  assert msg.data == {'a': 1, 'b': 2, 'c': 3}
+msg = rospy.wait_for_message('json', json_transport.PackedJson)
 
-rospy.Subscriber('json', json_transport.PackedJson, callback=callback)
+assert msg.data == {'a': 1, 'b': 2, 'c': 3}
 ```
