@@ -43,7 +43,6 @@ pub = rospy.Publisher('json', json_transport.PackedJson, queue_size=1, latch=Tru
 pub.publish(1)
 pub.publish([1, 2, 3])
 pub.publish({'a': 1, 'b': 2, 'c': 3})
-pub.publish(a=1, b=2, c=3)
 
 def callback(self, msg):
   assert msg.data == {'a': 1, 'b': 2, 'c': 3}

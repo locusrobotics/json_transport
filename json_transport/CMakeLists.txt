@@ -28,8 +28,7 @@ if(CATKIN_ENABLE_TESTING)
 
   catkin_install_python(
   PROGRAMS
-    test/talker_dict_py
-    test/talker_inline_py
+    test/talker_py
     test/test_listener_py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
@@ -40,8 +39,7 @@ if(CATKIN_ENABLE_TESTING)
   target_link_libraries(test_listener_cpp ${catkin_LIBRARIES})
 
   find_package(rostest)
-  add_rostest(test/transport.test ARGS talker_node:=talker_dict_py)
-  add_rostest(test/transport.test ARGS talker_node:=talker_inline_py)
+  add_rostest(test/transport.test ARGS talker_node:=talker_py)
   add_rostest(test/transport.test ARGS talker_node:=talker_cpp)
 
 endif()

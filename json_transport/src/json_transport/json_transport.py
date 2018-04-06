@@ -33,13 +33,9 @@ class PackedJson(rospy.msg.AnyMsg):
     _md5sum = json_msg.Json._md5sum
     _type = json_msg.Json._type
 
-    def __init__(self, *args, **kwargs):
-        if len(args) == 1:
-            self.data = args[0]
-        elif args:
-            self.data = args
-        elif kwargs:
-            self.data = kwargs
+    def __init__(self, data=None):
+        if data:
+            self.data = data
 
     def set_data(self, data):
         self._buff = msgpack.packb(data)
@@ -48,3 +44,9 @@ class PackedJson(rospy.msg.AnyMsg):
         return msgpack.unpackb(self._buff)
 
     data = property(get_data, set_data)
+
+    def __str__(self):
+        return str(self.data)
+
+    def __repr__(self):
+        return("{name}({data})".format(name=self.__class__.__name__, data=repr(self.data)))
