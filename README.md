@@ -2,11 +2,11 @@
 
 Providing schemaless transport over ROS pub/sub via JSON. This is useful when schema is enforced elsewhere, or the data is truly schemaless (i.e. parameters, diagnostics).
 
-The [`nlohmann/json.hpp`](https://github.com/nlohmann/json/blob/develop/single_include/nlohmann/json.hpp) library is included directly, but can be dropped for an apt dependency in artful, or if the package is bloomed into the rosdistro.
-
 ## C++
 
-The provided adapters allows publishing and subscribing [`nlohmann::json`](https://github.com/nlohmann/json) datatypes.
+The provided serializers allow publishing and subscribing `json_transport::json_t` datatypes, which are [`nlohmann::json`](https://github.com/nlohmann/json) under the hood.
+
+The [`nlohmann/json.hpp`](https://github.com/nlohmann/json/blob/develop/single_include/nlohmann/json.hpp) library is bundled in, but can be dropped for an apt dependency in artful, or if the package is bloomed into the rosdistro.
 
 ```
 #include "json_transport/json_transport.hpp"
@@ -32,7 +32,7 @@ assert(*received == sent);
 
 ## Python
 
-The provided adapters allow publishing and subscribing anything that can be serialized/deserialized natively via the stdlib `json` module.
+The provided `json_transport.PackedJson` message type allows publishing and subscribing anything that can be serialized/deserialized natively via the stdlib `json` module.
 
 ```
 import json_transport
