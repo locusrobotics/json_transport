@@ -1,5 +1,7 @@
 # json_transport
 
+[![Build Status](https://travis-ci.org/locusrobotics/json_transport.svg?branch=devel)](https://travis-ci.org/locusrobotics/json_transport)
+
 Providing schemaless transport over ROS pub/sub via JSON. This is useful when schema is enforced elsewhere, or the data is truly schemaless (i.e. parameters, diagnostics).
 
 ## C++
