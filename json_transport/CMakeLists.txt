@@ -17,10 +17,6 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-install(DIRECTORY include/nlohmann/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
 if(CATKIN_ENABLE_TESTING)
   find_package(roslint)
   roslint_cpp()
