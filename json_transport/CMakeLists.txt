@@ -26,6 +26,7 @@ if(CATKIN_ENABLE_TESTING)
   PROGRAMS
     test/talker_py
     test/test_listener_py
+    test/test_packed_json.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
   add_executable(talker_cpp test/talker.cpp)
@@ -37,5 +38,6 @@ if(CATKIN_ENABLE_TESTING)
   find_package(rostest)
   add_rostest(test/transport.test ARGS talker_node:=talker_py)
   add_rostest(test/transport.test ARGS talker_node:=talker_cpp)
+  catkin_add_nosetests(test/test_packed_json.py)
 
 endif()
