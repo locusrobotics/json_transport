@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 # Software License Agreement (BSD)
 #
-# \file      json_transport.py
-# \authors   Paul Bovbel <pbovbel@locusrobotics.com>
+# \file      test_packed_json
+# \authors   Andrew Blakey <ablakey@locusrobotics.com>
 # \copyright Copyright (c) (2018,), Locus Robotics, All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -23,29 +24,29 @@
 # DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import msgpack
-import rospy
-from json_msgs import msg as json_msg
+import json_transport
+import unittest
 
 
-class PackedJson(rospy.msg.AnyMsg):
+TEST_DATA = [
+    ["a", "json", "array"],
+    {"a": "json", "object": ["with", "nested", False, 1.23]},
+    0,
+    1,
+    True,
+    False,
+    None
+]
 
-    _md5sum = json_msg.Json._md5sum
-    _type = json_msg.Json._type
 
-    def __init__(self, data=None):
-        self.data = data
+class TestPackedJson(unittest.TestCase):
 
-    def set_data(self, data):
-        self._buff = msgpack.packb(data)
+    def test_init_packed_json(self):
+        for d in TEST_DATA:
+            msg = json_transport.PackedJson(d)
+            self.assertEquals(d, msg.data)
 
-    def get_data(self):
-        return msgpack.unpackb(self._buff)
 
-    data = property(get_data, set_data)
-
-    def __str__(self):
-        return str(self.data)
-
-    def __repr__(self):
-        return("{name}({data})".format(name=self.__class__.__name__, data=repr(self.data)))
+if __name__ == '__main__':
+    import rosunit
+    rosunit.unitrun('json_transport', 'test_packed_json', TestPackedJson)
