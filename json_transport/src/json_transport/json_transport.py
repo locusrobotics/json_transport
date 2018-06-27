@@ -40,7 +40,7 @@ class PackedJson(rospy.msg.AnyMsg):
         self._buff = msgpack.packb(data)
 
     def get_data(self):
-        return msgpack.unpackb(self._buff)
+        return msgpack.unpackb(self._buff, encoding="utf-8")
 
     data = property(get_data, set_data)
 
