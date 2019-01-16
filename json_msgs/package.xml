@@ -28,7 +28,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <package format="2">
   <name>json_msgs</name>
-  <version>0.0.3</version>
+  <version>0.1.0</version>
   <description>JSON ROS message</description>
 
   <author email="pbovbel@locusrobotics.com">Paul Bovbel</author>
