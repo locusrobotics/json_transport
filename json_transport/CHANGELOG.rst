@@ -2,6 +2,9 @@
 Changelog for package json_transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.3 (2018-07-16)
 ------------------
 * decode as utf 8 (`#9 <https://github.com/locusrobotics/json_transport/issues/9>`_)
