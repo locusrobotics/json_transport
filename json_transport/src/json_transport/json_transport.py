@@ -28,19 +28,24 @@ import rospy
 from json_msgs import msg as json_msg
 
 
-class PackedJson(rospy.msg.AnyMsg):
+def pack(data):
+    return json_msg.Json(bytes=msgpack.packb(data))
 
-    _md5sum = json_msg.Json._md5sum
-    _type = json_msg.Json._type
+
+def unpack(message):
+    return msgpack.unpackb(message.bytes, encoding="utf-8")
+
+
+class PackedJson(json_msg.Json):
 
     def __init__(self, data=None):
         self.data = data
 
     def set_data(self, data):
-        self._buff = msgpack.packb(data)
+        self.bytes = msgpack.packb(data)
 
     def get_data(self):
-        return msgpack.unpackb(self._buff, encoding="utf-8")
+        return msgpack.unpackb(self.bytes, encoding="utf-8")
 
     data = property(get_data, set_data)
 
