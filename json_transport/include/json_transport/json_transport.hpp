@@ -110,12 +110,6 @@ struct Serializer<json_transport::json_t>
   {
     json_transport::json_msg_t message = json_transport::pack(json);
     Serializer<json_transport::json_msg_t>::write(stream, message);
-
-    // std::vector<std::uint8_t> bytes = json_transport::json_t::to_msgpack(json);
-    // for (auto const & byte : bytes)
-    // {
-    //   stream.next(byte);
-    // }
   }
 
   template<typename Stream>
@@ -124,13 +118,6 @@ struct Serializer<json_transport::json_t>
     json_transport::json_msg_t message;
     Serializer<json_transport::json_msg_t>::read(stream, message);
     json = json_transport::unpack(message);
-
-    // std::vector<std::uint8_t> bytes(stream.getLength());
-    // for (auto & byte : bytes)
-    // {
-    //   stream.next(byte);
-    // }
-    // json = json_transport::json_t::from_msgpack(bytes);
   }
 
   inline static uint32_t serializedLength(const json_transport::json_t& json)
