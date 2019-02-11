@@ -34,6 +34,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <ros/message_traits.h>
 #include <ros/serialization.h>
+#include <ros/static_assert.h>
 
 namespace json_transport
 {

@@ -25,10 +25,10 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
+#include "json_transport/json_transport.hpp"
+
 #include "gtest/gtest.h"
 #include "ros/ros.h"
-
-#include "json_transport/json_transport.hpp"
 
 TEST(TestSuite, listen_test)
 {
