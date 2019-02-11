@@ -32,9 +32,19 @@ auto received = ros::topic::waitForMessage<json_transport::json_t>("json");
 assert(*received == sent);
 ```
 
+Nested `json_msg/Json` types can be packed/unpacked via helper methods:
+
+```
+MyCustomMessage message();
+message.json_field = json_transport::pack(json_data)
+
+assert(json_data == json_transport::unpack(message.json_field))
+```
+
+
 ## Python
 
-The provided `json_transport.PackedJson` message type allows publishing and subscribing anything that can be serialized/deserialized natively via the stdlib `json` module.
+The provided `json_transport.PackedJson` data type allows publishing and subscribing anything that can be serialized/deserialized natively via the stdlib `json` module.
 
 ```
 import json_transport
@@ -49,4 +59,14 @@ pub.publish({'a': 1, 'b': 2, 'c': 3})
 msg = rospy.wait_for_message('json', json_transport.PackedJson)
 
 assert msg.data == {'a': 1, 'b': 2, 'c': 3}
+```
+
+Nested `json_msg/Json` types can be packed/unpacked via helper methods:
+
+```
+msg = MyCustomMessage(
+    json_field=json_transport.pack(serializable_data)
+)
+
+assert serializable_data == json_transport.unpack(msg.json_field)
 ```

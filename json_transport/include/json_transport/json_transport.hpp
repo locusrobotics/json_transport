@@ -35,6 +35,18 @@ namespace json_transport
 {
   typedef nlohmann::json json_t;
   typedef json_msgs::Json json_msg_t;
+
+  inline json_t unpack(json_msg_t message)
+  {
+    return json_t::from_msgpack(message.bytes);
+  }
+
+  inline json_msg_t pack(json_t data)
+  {
+    json_msg_t message{};
+    message.bytes = json_t::to_msgpack(data);
+    return message;
+  }
 }
 
 namespace ros
@@ -96,27 +108,21 @@ struct Serializer<json_transport::json_t>
   template<typename Stream>
   inline static void write(Stream& stream, const json_transport::json_t& json)
   {
-    std::vector<std::uint8_t> bytes = json_transport::json_t::to_msgpack(json);
-    for (auto const & byte : bytes)
-    {
-      stream.next(byte);
-    }
+    json_transport::json_msg_t message = json_transport::pack(json);
+    Serializer<json_transport::json_msg_t>::write(stream, message);
   }
 
   template<typename Stream>
   inline static void read(Stream& stream, json_transport::json_t& json)
   {
-    std::vector<std::uint8_t> bytes(stream.getLength());
-    for (auto & byte : bytes)
-    {
-      stream.next(byte);
-    }
-    json = json_transport::json_t::from_msgpack(bytes);
+    json_transport::json_msg_t message;
+    Serializer<json_transport::json_msg_t>::read(stream, message);
+    json = json_transport::unpack(message);
   }
 
   inline static uint32_t serializedLength(const json_transport::json_t& json)
   {
-    return json_transport::json_t::to_msgpack(json).size();
+    return json_transport::json_t::to_msgpack(json).size() + 4;
   }
 };
 
