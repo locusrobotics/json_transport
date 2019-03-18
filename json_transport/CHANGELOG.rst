@@ -2,8 +2,8 @@
 Changelog for package json_transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2019-03-18)
+------------------
 * Remove unused import
 * Include static_assert header
 * Add include guard
