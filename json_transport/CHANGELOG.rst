@@ -2,6 +2,16 @@
 Changelog for package json_transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove unused import
+* Include static_assert header
+* Add include guard
+* Update __init_\_.py (`#11 <https://github.com/locusrobotics/json_transport/issues/11>`_)
+  Update __init_\_.py to include pack and unpack exports.
+* Provide helpers for nested fields (`#10 <https://github.com/locusrobotics/json_transport/issues/10>`_)
+* Contributors: Andrew Blakey, Paul Bovbel
+
 0.1.0 (2019-01-16)
 ------------------
 
