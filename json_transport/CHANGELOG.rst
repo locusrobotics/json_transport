@@ -2,8 +2,8 @@
 Changelog for package json_transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2019-07-12)
+------------------
 * Add requirements
 * Contributors: Paul Bovbel
 
