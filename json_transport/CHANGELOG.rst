@@ -2,6 +2,11 @@
 Changelog for package json_transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add requirements
+* Contributors: Paul Bovbel
+
 0.2.0 (2019-03-18)
 ------------------
 * Remove unused import
