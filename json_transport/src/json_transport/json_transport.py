@@ -28,6 +28,7 @@
 import json
 
 from json_msgs import msg as json_msg
+from jsonschema import validate, ValidationError
 
 
 def pack(data):
@@ -40,7 +41,9 @@ def unpack(message):
 
 class PackedJson(json_msg.Json):
 
-    def __init__(self, data=None):
+    def __init__(self, data=None, schema=None):
+        if schema:
+            validate(instance=data, schema=schema)
         self.data = data
 
     def set_data(self, data):
