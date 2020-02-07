@@ -43,13 +43,13 @@ namespace json_transport
 
   inline json_t unpack(json_msg_t message)
   {
-    return json_t::parse(message.bytes);
+    return json_t::parse(message.json);
   }
 
   inline json_msg_t pack(json_t data)
   {
     json_msg_t message{};
-    message.bytes = data.dump();
+    message.json = data.dump();
     return message;
   }
 }

@@ -31,11 +31,11 @@ from json_msgs import msg as json_msg
 
 
 def pack(data):
-    return json_msg.Json(bytes=json.dumps(data))
+    return json_msg.Json(json=json.dumps(data))
 
 
 def unpack(message):
-    return json.loads(message.bytes)
+    return json.loads(message.json)
 
 
 class PackedJson(json_msg.Json):
@@ -44,10 +44,10 @@ class PackedJson(json_msg.Json):
         self.data = data
 
     def set_data(self, data):
-        self.bytes = json.dumps(data)
+        self.json = json.dumps(data)
 
     def get_data(self):
-        return json.loads(self.bytes)
+        return json.loads(self.json)
 
     data = property(get_data, set_data)
 
