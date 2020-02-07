@@ -23,17 +23,19 @@
 # DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import msgpack
+# import msgpack
+
+import json
 
 from json_msgs import msg as json_msg
 
 
 def pack(data):
-    return json_msg.Json(bytes=msgpack.packb(data))
+    return json_msg.Json(bytes=json.dumps(data))
 
 
 def unpack(message):
-    return msgpack.unpackb(message.bytes, encoding="utf-8")
+    return json.loads(message.bytes)
 
 
 class PackedJson(json_msg.Json):
@@ -42,10 +44,10 @@ class PackedJson(json_msg.Json):
         self.data = data
 
     def set_data(self, data):
-        self.bytes = msgpack.packb(data)
+        self.bytes = json.dumps(data)
 
     def get_data(self):
-        return msgpack.unpackb(self.bytes, encoding="utf-8")
+        return json.loads(self.bytes)
 
     data = property(get_data, set_data)
 
