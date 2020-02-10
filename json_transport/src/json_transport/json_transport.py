@@ -23,29 +23,32 @@
 # DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import msgpack
+import json
 
 from json_msgs import msg as json_msg
+from jsonschema import validate, ValidationError
 
 
 def pack(data):
-    return json_msg.Json(bytes=msgpack.packb(data))
+    return json_msg.Json(json=json.dumps(data))
 
 
 def unpack(message):
-    return msgpack.unpackb(message.bytes, encoding="utf-8")
+    return json.loads(message.json)
 
 
 class PackedJson(json_msg.Json):
 
-    def __init__(self, data=None):
+    def __init__(self, data=None, schema=None):
+        if schema:
+            validate(instance=data, schema=schema)
         self.data = data
 
     def set_data(self, data):
-        self.bytes = msgpack.packb(data)
+        self.json = json.dumps(data)
 
     def get_data(self):
-        return msgpack.unpackb(self.bytes, encoding="utf-8")
+        return json.loads(self.json)
 
     data = property(get_data, set_data)
 

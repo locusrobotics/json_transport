@@ -46,6 +46,14 @@ class TestPackedJson(unittest.TestCase):
             msg = json_transport.PackedJson(d)
             self.assertEquals(d, msg.data)
 
+    def test_init_packed_json_schema(self):
+        data = ["a", "json", "array"]
+
+        json_transport.PackedJson(data=data, schema={"maxItems": 3})
+
+        with self.assertRaises(json_transport.ValidationError):
+            json_transport.PackedJson(data=data, schema={"maxItems": 2})
+
 
 if __name__ == '__main__':
     import rosunit

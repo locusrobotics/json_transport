@@ -43,13 +43,13 @@ namespace json_transport
 
   inline json_t unpack(json_msg_t message)
   {
-    return json_t::from_msgpack(message.bytes);
+    return json_t::parse(message.json);
   }
 
   inline json_msg_t pack(json_t data)
   {
     json_msg_t message{};
-    message.bytes = json_t::to_msgpack(data);
+    message.json = data.dump();
     return message;
   }
 }
@@ -127,7 +127,7 @@ struct Serializer<json_transport::json_t>
 
   inline static uint32_t serializedLength(const json_transport::json_t& json)
   {
-    return json_transport::json_t::to_msgpack(json).size() + 4;
+    return json.dump().length() + 4;
   }
 };
 
