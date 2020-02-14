@@ -17,8 +17,15 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
+install(FILES requirements.txt
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
 if(CATKIN_ENABLE_TESTING)
+  find_package(catkin_virtualenv)
   find_package(roslint)
+
+  catkin_generate_virtualenv()
+
   roslint_cpp()
   roslint_python()
 
