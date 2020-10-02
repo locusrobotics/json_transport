@@ -2,6 +2,16 @@
 Changelog for package json_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove msgpack and add basic jsonschema support (`#13 <https://github.com/locusrobotics/json_transport/issues/13>`_)
+  * Drop messagepack for raw string transport of json data
+  * Rename field for context
+  * Add basic jsonschema support
+  * Stray line
+  * Fix test
+* Contributors: Paul Bovbel
+
 0.3.0 (2019-07-12)
 ------------------
 
