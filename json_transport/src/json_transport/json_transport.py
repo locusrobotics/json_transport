@@ -34,7 +34,7 @@ def pack(data):
 
 
 def unpack(message):
-    return json.loads(message.json)
+    return json.loads(message.json if message.json else "null")
 
 
 class PackedJson(json_msg.Json):

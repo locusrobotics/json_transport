@@ -24,7 +24,9 @@ if(CATKIN_ENABLE_TESTING)
   find_package(catkin_virtualenv)
   find_package(roslint)
 
-  catkin_generate_virtualenv()
+  catkin_generate_virtualenv(
+    INPUT_REQUIREMENTS requirements.in
+  )
 
   roslint_cpp()
   roslint_python()
