@@ -1,7 +1,7 @@
 attrs==21.2.0
 configparser==4.0.2
 contextlib2==0.6.0.post1
-functools32==3.2.3.post2
+# functools32==3.2.3.post2  # this is for python2 only, and json_transport has python3 consumers
 importlib-metadata==2.1.1
 jsonschema==3.2.0
 pathlib2==2.3.5
