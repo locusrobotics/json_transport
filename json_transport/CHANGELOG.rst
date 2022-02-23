@@ -2,8 +2,8 @@
 Changelog for package json_transport
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.0 (2022-02-23)
+------------------
 * Fix python3 build
 * Convert default initialized string to 'null' for json parsing (#15)
   * Convert default initialized string to 'null' for json parsing
