@@ -10,8 +10,8 @@ Changelog for package json_transport
   * Lock requirements
 * Contributors: Paul Bovbel
 
-Forthcoming
------------
+0.6.0 (2023-02-22)
+------------------
 * 0.5.0
 * Update changelogs
 * Fix python3 build
