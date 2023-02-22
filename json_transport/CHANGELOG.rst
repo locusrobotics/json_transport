@@ -10,6 +10,16 @@ Changelog for package json_transport
   * Lock requirements
 * Contributors: Paul Bovbel
 
+Forthcoming
+-----------
+* 0.5.0
+* Update changelogs
+* Fix python3 build
+* Convert default initialized string to 'null' for json parsing (#15)
+  * Convert default initialized string to 'null' for json parsing
+  * Lock requirements
+* Contributors: Gary Servin, Paul Bovbel
+
 0.4.0 (2020-10-02)
 ------------------
 * Pull in jsonschema via requirements.txt (`#14 <https://github.com/locusrobotics/json_transport/issues/14>`_)
