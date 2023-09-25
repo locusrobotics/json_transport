@@ -20,8 +20,8 @@ Changelog for package json_transport
   * Lock requirements
 * Contributors: Gary Servin, Paul Bovbel
 
-Forthcoming
------------
+0.7.0 (2023-09-25)
+------------------
 * 0.6.0
 * Update changelogs
 * 0.5.0
