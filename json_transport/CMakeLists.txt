@@ -4,6 +4,7 @@ project(json_transport)
 set_directory_properties(PROPERTIES COMPILE_OPTIONS "-std=c++14;-Wall;-Werror")
 
 find_package(catkin REQUIRED COMPONENTS json_msgs roscpp)
+find_package(nlohmann_json REQUIRED)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
