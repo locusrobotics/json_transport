@@ -29,9 +29,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef JSON_TRANSPORT_JSON_TRANSPORT_HPP
 #define JSON_TRANSPORT_JSON_TRANSPORT_HPP
 
-#include "json_transport/nlohmann/json.hpp"
 #include "json_msgs/Json.h"
 
+#include <nlohmann/json.hpp>
 #include <ros/message_traits.h>
 #include <ros/serialization.h>
 #include <ros/static_assert.h>
