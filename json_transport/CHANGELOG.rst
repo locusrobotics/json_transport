@@ -32,8 +32,8 @@ Changelog for package json_transport
   * Lock requirements
 * Contributors: Gary Servin, Paul Bovbel
 
-Forthcoming
------------
+0.9.2 (2024-08-06)
+------------------
 * RST-10567: Use nlohmann_json directly (`#19 <https://github.com/locusrobotics/json_transport/issues/19>`_)
 * Contributors: Aaditya Ravindran
 
