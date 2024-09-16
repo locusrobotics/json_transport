@@ -1,15 +1,13 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(json_msgs)
 
-find_package(catkin REQUIRED COMPONENTS message_generation)
+set(CMAKE_CXX_STANDARD 17)
 
-add_message_files(
-  DIRECTORY msg
-  FILES Json.msg
-)
+find_package(ament_cmake)
+find_package(rosidl_default_generators REQUIRED)
 
-generate_messages()
-
-catkin_package(
-  CATKIN_DEPENDS message_runtime
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Json.msg"
+  DEPENDENCIES
+  ADD_LINTER_TESTS
 )
