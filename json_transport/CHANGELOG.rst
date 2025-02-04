@@ -32,6 +32,9 @@ Changelog for package json_transport
   * Lock requirements
 * Contributors: Gary Servin, Paul Bovbel
 
+Forthcoming
+-----------
+
 0.10.0 (2024-09-16)
 -------------------
 * RST-10567: Use nlohmann_json directly (#19)
