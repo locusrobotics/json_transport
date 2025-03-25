@@ -26,7 +26,7 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<package format="2">
+<package format="3">
   <name>json_transport</name>
   <version>0.10.0</version>
   <description>JSON transport for ROS</description>
@@ -36,19 +36,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
   <license>BSD</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <depend>json_msgs</depend>
   <depend>nlohmann-json-dev</depend>
-  <depend>roscpp</depend>
+  <depend>rclcpp</depend>
+  <depend>rclpy</depend>
 
-  <test_depend>catkin_virtualenv</test_depend>
-  <test_depend>roslint</test_depend>
-  <test_depend>rostest</test_depend>
-  <test_depend>rosunit</test_depend>
+  <test_depend>ament_cmake_virtualenv</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
 
   <export>
     <pip_requirements>requirements.txt</pip_requirements>
+    <build_type>ament_cmake</build_type>
   </export>
 
 </package>

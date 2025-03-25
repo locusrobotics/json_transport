@@ -1,53 +1,102 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(json_transport)
 
-set_directory_properties(PROPERTIES COMPILE_OPTIONS "-std=c++14;-Wall;-Werror")
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-Wall -Werror -Wextra -Wpedantic)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS json_msgs roscpp)
+find_package(ament_cmake REQUIRED)
+find_package(json_msgs REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include)
 
-catkin_package(
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS json_msgs roscpp
-)
-catkin_python_setup()
+add_library(${PROJECT_NAME} INTERFACE)
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+target_include_directories(${PROJECT_NAME} INTERFACE
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>"
 )
 
-install(FILES requirements.txt
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+target_link_libraries(${PROJECT_NAME} INTERFACE)
 
-if(CATKIN_ENABLE_TESTING)
-  find_package(catkin_virtualenv)
-  find_package(roslint)
+install(TARGETS ${PROJECT_NAME}
+  EXPORT "export_${PROJECT_NAME}"
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib
+  INCLUDES DESTINATION include
+)
 
-  catkin_generate_virtualenv(
-    INPUT_REQUIREMENTS requirements.in
-  )
+install(
+  DIRECTORY
+    include/${PROJECT_NAME}/
+  DESTINATION
+    include/${PROJECT_NAME}
+)
 
-  roslint_cpp()
-  roslint_python()
+#########
+# Python
+#########
 
-  catkin_install_python(
-  PROGRAMS
-    test/talker_py
-    test/test_listener_py
-    test/test_packed_json.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+find_package(ament_cmake_python REQUIRED)
 
-  add_executable(talker_cpp test/talker.cpp)
-  target_link_libraries(talker_cpp ${catkin_LIBRARIES})
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
 
-  catkin_add_executable_with_gtest(test_listener_cpp test/test_listener.cpp)
-  target_link_libraries(test_listener_cpp ${catkin_LIBRARIES})
+install(
+  FILES requirements.txt
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}
+)
 
-  find_package(rostest)
-  add_rostest(test/transport.test ARGS talker_node:=talker_py)
-  add_rostest(test/transport.test ARGS talker_node:=talker_cpp)
-  catkin_add_nosetests(test/test_packed_json.py)
+#if(CATKIN_ENABLE_TESTING)
+#  find_package(catkin_virtualenv)
+#  find_package(roslint)
+#
+#  # Python configuration
+#  find_package(ament_cmake_virtualenv)
+#  ament_generate_virtualenv(
+#    PYTHON_VERSION 3.12
+#    INPUT_REQUIREMENTS requirements.in
+#  )
+#
+#  ament_python_install_package(
+#      locus_ota_service
+#  )
+#
+#
+#  catkin_generate_virtualenv(
+#    INPUT_REQUIREMENTS requirements.in
+#  )
+#
+#  roslint_cpp()
+#  roslint_python()
+#
+#  catkin_install_python(
+#  PROGRAMS
+#    test/talker_py
+#    test/test_listener_py
+#    test/test_packed_json.py
+#  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+#
+#  add_executable(talker_cpp test/talker.cpp)
+#  target_link_libraries(talker_cpp PUBLIC
+#    rclcpp::rclcpp
+#    json_msgs
+#  )
+#
+#  catkin_add_executable_with_gtest(test_listener_cpp test/test_listener.cpp)
+#  target_link_libraries(test_listener_cpp ${catkin_LIBRARIES})
+#
+#  find_package(rostest)
+#  add_rostest(test/transport.test ARGS talker_node:=talker_py)
+#  add_rostest(test/transport.test ARGS talker_node:=talker_cpp)
+#  catkin_add_nosetests(test/test_packed_json.py)
+#
+#endif()
 
-endif()
+ament_export_targets("export_${PROJECT_NAME}")
+ament_package()
