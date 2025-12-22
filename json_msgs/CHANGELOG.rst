@@ -19,8 +19,8 @@ Changelog for package json_msgs
 * Update changelogs
 * Contributors: Gary Servin
 
-Forthcoming
------------
+0.13.1 (2025-12-22)
+-------------------
 
 0.13.0 (2025-09-30)
 -------------------
