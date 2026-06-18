@@ -32,6 +32,11 @@ Changelog for package json_transport
   * Lock requirements
 * Contributors: Gary Servin, Paul Bovbel
 
+Forthcoming
+-----------
+* Update minimum cmake version
+* Contributors: Gary Servin
+
 0.14.0 (2026-03-03)
 -------------------
 
