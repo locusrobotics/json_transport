@@ -25,19 +25,21 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import json
 
-from json_msgs import msg as json_msg
+from json_msgs.msg import Json
 from jsonschema import validate, ValidationError
+
+__all__ = ["PackedJson", "pack", "unpack", "ValidationError"]
 
 
 def pack(data):
-    return json_msg.Json(json=json.dumps(data))
+    return Json(json=json.dumps(data))
 
 
 def unpack(message):
     return json.loads(message.json if message.json else "null")
 
 
-class PackedJson(json_msg.Json):
+class PackedJson(Json):
 
     def __init__(self, data=None, schema=None):
         if schema:
