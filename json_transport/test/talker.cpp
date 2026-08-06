@@ -27,25 +27,31 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 #include "json_transport/json_transport.hpp"
 
-#include "ros/ros.h"
+#include <chrono>
+
+#include <rclcpp/rclcpp.hpp>
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "json_talker");
+  rclcpp::init(argc, argv);
+  auto node = rclcpp::Node::make_shared("json_talker");
 
-  ros::NodeHandle nh;
+  node->declare_parameter<std::string>("test_data", "null");
+  const auto data_string = node->get_parameter("test_data").as_string();
+  const auto data = json_transport::json_t::parse(data_string);
 
-  auto publisher = nh.advertise<json_transport::json_t>("json", 1000, true);
+  auto qos = rclcpp::QoS(10).transient_local().reliable();
+  auto publisher = node->create_publisher<json_transport::json_t>("json", qos);
 
-  std::string data_string;
-  nh.getParam("test_data", data_string);
-  auto data = json_transport::json_t::parse(data_string);
+  RCLCPP_INFO_STREAM(node->get_logger(), "Publishing " << data);
 
-  ROS_INFO_STREAM("Publishing " << data);
+  auto timer = node->create_wall_timer(std::chrono::milliseconds(200), [publisher, data]() {
+      publisher->publish(data);
+    });
+  (void)timer;
 
-  publisher.publish(data);
-
-  ros::spin();
+  rclcpp::spin(node);
+  rclcpp::shutdown();
 
   return 0;
 }
