@@ -1,53 +1,65 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 project(json_transport)
 
-set_directory_properties(PROPERTIES COMPILE_OPTIONS "-std=c++14;-Wall;-Werror")
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS json_msgs roscpp)
+add_compile_options(-Wall -Wextra -Wpedantic)
+
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(json_msgs REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(rclcpp REQUIRED)
 
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-catkin_package(
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS json_msgs roscpp
-)
-catkin_python_setup()
+include_directories(include)
 
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION include/${PROJECT_NAME}
 )
 
-install(FILES requirements.txt
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR src/${PROJECT_NAME})
 
-if(CATKIN_ENABLE_TESTING)
-  find_package(catkin_virtualenv)
-  find_package(roslint)
+if(BUILD_TESTING)
+  find_package(ament_cmake_virtualenv REQUIRED)
+  find_package(ament_cmake_pytest REQUIRED)
+  find_package(launch_testing_ament_cmake REQUIRED)
 
-  catkin_generate_virtualenv(
-    INPUT_REQUIREMENTS requirements.in
+  ament_generate_virtualenv(
+    PYTHON_VERSION 3
   )
 
-  roslint_cpp()
-  roslint_python()
+  install(FILES requirements.txt
+    DESTINATION share/${PROJECT_NAME}
+  )
 
-  catkin_install_python(
-  PROGRAMS
+  install(PROGRAMS
     test/talker_py
     test/test_listener_py
-    test/test_packed_json.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+    DESTINATION lib/${PROJECT_NAME}
+  )
 
   add_executable(talker_cpp test/talker.cpp)
-  target_link_libraries(talker_cpp ${catkin_LIBRARIES})
+  ament_target_dependencies(talker_cpp json_msgs rclcpp)
+  target_link_libraries(talker_cpp nlohmann_json::nlohmann_json)
 
-  catkin_add_executable_with_gtest(test_listener_cpp test/test_listener.cpp)
-  target_link_libraries(test_listener_cpp ${catkin_LIBRARIES})
+  add_executable(test_listener_cpp test/test_listener.cpp)
+  ament_target_dependencies(test_listener_cpp json_msgs rclcpp)
+  target_link_libraries(test_listener_cpp nlohmann_json::nlohmann_json)
 
-  find_package(rostest)
-  add_rostest(test/transport.test ARGS talker_node:=talker_py)
-  add_rostest(test/transport.test ARGS talker_node:=talker_cpp)
-  catkin_add_nosetests(test/test_packed_json.py)
+  install(TARGETS
+    talker_cpp
+    test_listener_cpp
+    DESTINATION lib/${PROJECT_NAME}
+  )
 
+  ament_add_pytest_test(test_packed_json test/test_packed_json.py)
+  add_launch_test(test/transport_py_talker.launch.py TIMEOUT 20)
+  add_launch_test(test/transport_cpp_talker.launch.py TIMEOUT 20)
 endif()
+
+ament_export_include_directories(include)
+ament_export_dependencies(json_msgs rclcpp)
+
+ament_package()

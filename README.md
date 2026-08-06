@@ -23,13 +23,25 @@ json_transport::json_t sent = {
   }},
 };
 
-ros::NodeHandle nh;
-auto publisher = nh.advertise<json_transport::json_t>("json", 1, true);
-publisher.publish(sent);
+rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("json_talker");
+auto publisher = node->create_publisher<json_transport::json_t>(
+    "json", rclcpp::QoS(1).transient_local().reliable());
+publisher->publish(sent);
 
-auto received = ros::topic::waitForMessage<json_transport::json_t>("json");
+json_transport::json_t received;
+bool got_message = false;
+auto sub = node->create_subscription<json_transport::json_t>(
+    "json", rclcpp::QoS(1).transient_local().reliable(),
+    [&](const json_transport::json_t & msg) {
+      received = msg;
+      got_message = true;
+    });
 
-assert(*received == sent);
+while (rclcpp::ok() && !got_message) {
+  rclcpp::spin_some(node);
+}
+
+assert(received == sent);
 ```
 
 Nested `json_msg/Json` types can be packed/unpacked via helper methods:
@@ -48,15 +60,33 @@ The provided `json_transport.PackedJson` data type allows publishing and subscri
 
 ```
 import json_transport
-import rospy
+import rclpy
+from rclpy.node import Node
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 
-rospy.init_node('json_talker')
-pub = rospy.Publisher('json', json_transport.PackedJson, queue_size=1, latch=True)
-pub.publish(1)
-pub.publish([1, 2, 3])
-pub.publish({'a': 1, 'b': 2, 'c': 3})
+rclpy.init()
+node = Node('json_talker')
 
-msg = rospy.wait_for_message('json', json_transport.PackedJson)
+qos = QoSProfile(
+  depth=1,
+  durability=DurabilityPolicy.TRANSIENT_LOCAL,
+  reliability=ReliabilityPolicy.RELIABLE,
+)
+pub = node.create_publisher(json_transport.PackedJson, 'json', qos)
+
+pub.publish(json_transport.PackedJson(1))
+pub.publish(json_transport.PackedJson([1, 2, 3]))
+pub.publish(json_transport.PackedJson({'a': 1, 'b': 2, 'c': 3}))
+
+msg = None
+
+def callback(incoming):
+  global msg
+  msg = incoming
+
+sub = node.create_subscription(json_transport.PackedJson, 'json', callback, qos)
+while rclpy.ok() and msg is None:
+  rclpy.spin_once(node, timeout_sec=0.1)
 
 assert msg.data == {'a': 1, 'b': 2, 'c': 3}
 ```

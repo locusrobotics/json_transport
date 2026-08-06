@@ -27,25 +27,68 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 #include "json_transport/json_transport.hpp"
 
-#include "gtest/gtest.h"
-#include "ros/ros.h"
+#include <chrono>
+#include <mutex>
+#include <optional>
+#include <thread>
 
-TEST(TestSuite, listen_test)
+#include <rclcpp/rclcpp.hpp>
+
+int main(int argc, char **argv)
 {
-  ros::NodeHandle nh;
+  rclcpp::init(argc, argv);
 
-  std::string data_string;
-  nh.getParam("test_data", data_string);
-  auto data = json_transport::json_t::parse(data_string);
+  auto node = rclcpp::Node::make_shared("json_listener_cpp");
+  node->declare_parameter<std::string>("test_data", "null");
+  const auto expected = json_transport::json_t::parse(node->get_parameter("test_data").as_string());
 
-  boost::shared_ptr<const json_transport::json_t> received = ros::topic::waitForMessage<json_transport::json_t>("json");
-  ROS_INFO_STREAM("Received " << *received);
+  std::mutex mutex;
+  std::optional<json_transport::json_t> received;
 
-  EXPECT_EQ(data, *received);
-}
+  auto subscription = node->create_subscription<json_transport::json_t>(
+    "json",
+    rclcpp::QoS(10).transient_local().reliable(),
+    [&](const json_transport::json_t & message) {
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        received = message;
+      }
+      RCLCPP_INFO_STREAM(node->get_logger(), "Received " << message);
+    });
 
-int main(int argc, char **argv){
-  testing::InitGoogleTest(&argc, argv);
-  ros::init(argc, argv, "json_listener");
-  return RUN_ALL_TESTS();
+  (void)subscription;
+
+  rclcpp::executors::SingleThreadedExecutor executor;
+  executor.add_node(node);
+
+  auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+  while (rclcpp::ok()) {
+    {
+      std::unique_lock<std::mutex> lock(mutex);
+      if (received.has_value()) {
+        break;
+      }
+    }
+
+    executor.spin_some();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+    if (std::chrono::steady_clock::now() > deadline) {
+      RCLCPP_ERROR(node->get_logger(), "Timed out waiting for message on 'json'");
+      rclcpp::shutdown();
+      return 1;
+    }
+  }
+
+  int exit_code = 0;
+  {
+    std::lock_guard<std::mutex> lock(mutex);
+    if (!received.has_value() || received.value() != expected) {
+      RCLCPP_ERROR_STREAM(node->get_logger(), "Received payload does not match expected payload");
+      exit_code = 1;
+    }
+  }
+
+  rclcpp::shutdown();
+  return exit_code;
 }
