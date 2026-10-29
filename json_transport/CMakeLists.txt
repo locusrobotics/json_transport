@@ -22,17 +22,20 @@ install(DIRECTORY include/${PROJECT_NAME}/
 ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR src/${PROJECT_NAME})
 
 if(BUILD_TESTING)
-  find_package(ament_cmake_virtualenv REQUIRED)
   find_package(ament_cmake_pytest REQUIRED)
   find_package(launch_testing_ament_cmake REQUIRED)
 
-  ament_generate_virtualenv(
-    PYTHON_VERSION 3
-  )
+  # Optional: jsonschema is also available via the python3-jsonschema system dependency.
+  find_package(ament_cmake_virtualenv QUIET)
+  if(ament_cmake_virtualenv_FOUND)
+    ament_generate_virtualenv(
+      PYTHON_VERSION 3
+    )
 
-  install(FILES requirements.txt
-    DESTINATION share/${PROJECT_NAME}
-  )
+    install(FILES requirements.txt
+      DESTINATION share/${PROJECT_NAME}
+    )
+  endif()
 
   install(PROGRAMS
     test/talker_py
