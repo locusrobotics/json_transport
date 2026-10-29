@@ -29,17 +29,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef JSON_TRANSPORT_JSON_TRANSPORT_HPP
 #define JSON_TRANSPORT_JSON_TRANSPORT_HPP
 
-#include "json_msgs/Json.h"
+#include "json_msgs/msg/json.hpp"
 
 #include <nlohmann/json.hpp>
-#include <ros/message_traits.h>
-#include <ros/serialization.h>
-#include <ros/static_assert.h>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp/type_adapter.hpp>
 
 namespace json_transport
 {
   typedef nlohmann::json json_t;
-  typedef json_msgs::Json json_msg_t;
+  typedef json_msgs::msg::Json json_msg_t;
 
   inline json_t unpack(json_msg_t message)
   {
@@ -54,84 +53,27 @@ namespace json_transport
   }
 }
 
-namespace ros
+namespace rclcpp
 {
-namespace message_traits
-{
-
-ROS_STATIC_ASSERT(sizeof(json_transport::json_t) == 16);
-
 template<>
-struct MD5Sum<json_transport::json_t>
+struct TypeAdapter<json_transport::json_t, json_transport::json_msg_t>
 {
-  static const char* value()
+  using is_specialized = std::true_type;
+  using custom_type = json_transport::json_t;
+  using ros_message_type = json_transport::json_msg_t;
+
+  static void convert_to_ros_message(const custom_type& source, ros_message_type& destination)
   {
-    return MD5Sum<json_transport::json_msg_t>::value();
+    destination = json_transport::pack(source);
   }
 
-  static const char* value(const json_transport::json_t&)
+  static void convert_to_custom(const ros_message_type& source, custom_type& destination)
   {
-    return value();
+    destination = json_transport::unpack(source);
   }
 };
+} // namespace rclcpp
 
-template<>
-struct DataType<json_transport::json_t>
-{
-  static const char* value()
-  {
-    return DataType<json_transport::json_msg_t>::value();
-  }
-
-  static const char* value(const json_transport::json_t&)
-  {
-    return value();
-  }
-};
-
-template<>
-struct Definition<json_transport::json_t>
-{
-  static const char* value()
-  {
-    return Definition<json_transport::json_msg_t>::value();
-  }
-
-  static const char* value(const json_transport::json_t&)
-  {
-    return value();
-  }
-};
-} // namespace message_traits
-
-namespace serialization
-{
-
-template<>
-struct Serializer<json_transport::json_t>
-{
-  template<typename Stream>
-  inline static void write(Stream& stream, const json_transport::json_t& json)
-  {
-    json_transport::json_msg_t message = json_transport::pack(json);
-    Serializer<json_transport::json_msg_t>::write(stream, message);
-  }
-
-  template<typename Stream>
-  inline static void read(Stream& stream, json_transport::json_t& json)
-  {
-    json_transport::json_msg_t message;
-    Serializer<json_transport::json_msg_t>::read(stream, message);
-    json = json_transport::unpack(message);
-  }
-
-  inline static uint32_t serializedLength(const json_transport::json_t& json)
-  {
-    return json.dump().length() + 4;
-  }
-};
-
-} // namespace serialization
-} // namespace ros
+RCLCPP_USING_CUSTOM_TYPE_AS_ROS_MESSAGE_TYPE(json_transport::json_t, json_transport::json_msg_t);
 
 #endif  // JSON_TRANSPORT_JSON_TRANSPORT_HPP

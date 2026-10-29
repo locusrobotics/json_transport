@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD)
 #
 # \file      test_listener_py
@@ -26,36 +26,60 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import json
 import json_transport
-import rospy
-import rostest
+import rclpy
 import sys
 import threading
-import unittest
+import time
 
-from functools import partial
+from rclpy.node import Node
+from rclpy.qos import DurabilityPolicy
+from rclpy.qos import QoSProfile
+from rclpy.qos import ReliabilityPolicy
 
 
-class TestListener(unittest.TestCase):
+class JsonListener(Node):
 
-    def __init__(self, *args):
-        super(TestListener, self).__init__(*args)
+    def __init__(self):
+        super().__init__('test_listener_py')
+        self.declare_parameter('test_data', 'null')
+        self.expected = json.loads(self.get_parameter('test_data').value)
+        self.received = None
+        self.received_event = threading.Event()
 
-    def callback(self, msg, event):
-        self.receive_data = msg.data
-        rospy.loginfo("Received {}".format(self.receive_data))
-        event.set()
+        qos = QoSProfile(
+            depth=10,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            reliability=ReliabilityPolicy.RELIABLE,
+        )
+        self.subscription = self.create_subscription(
+            json_transport.PackedJson,
+            'json',
+            self._callback,
+            qos,
+        )
 
-    def test_listen(self):
-        receive_event = threading.Event()
-        self.sub = rospy.Subscriber(
-            'json', json_transport.PackedJson, callback=partial(self.callback, event=receive_event))
-        receive_event.wait(5)
-
-        data = json.loads(rospy.get_param("test_data"))
-
-        self.assertEquals(data, self.receive_data)
+    def _callback(self, msg):
+        self.received = msg.data
+        self.get_logger().info(f'Received {self.received}')
+        self.received_event.set()
 
 
 if __name__ == '__main__':
-    rospy.init_node('test_listener_py')
-    rostest.rosrun('json_transport', 'test_listener_py', TestListener, sys.argv)
+    rclpy.init(args=sys.argv)
+    node = JsonListener()
+
+    deadline = time.monotonic() + 5.0
+    while rclpy.ok() and time.monotonic() < deadline and not node.received_event.is_set():
+        rclpy.spin_once(node, timeout_sec=0.1)
+
+    status = 0
+    if not node.received_event.is_set():
+        node.get_logger().error("Timed out waiting for message on 'json'")
+        status = 1
+    elif node.received != node.expected:
+        node.get_logger().error('Received payload does not match expected payload')
+        status = 1
+
+    node.destroy_node()
+    rclpy.shutdown()
+    sys.exit(status)

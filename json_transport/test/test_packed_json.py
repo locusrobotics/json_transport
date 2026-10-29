@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD)
 #
 # \file      test_packed_json
@@ -44,7 +44,7 @@ class TestPackedJson(unittest.TestCase):
     def test_init_packed_json(self):
         for d in TEST_DATA:
             msg = json_transport.PackedJson(d)
-            self.assertEquals(d, msg.data)
+            self.assertEqual(d, msg.data)
 
     def test_init_packed_json_schema(self):
         data = ["a", "json", "array"]
@@ -56,5 +56,4 @@ class TestPackedJson(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    import rosunit
-    rosunit.unitrun('json_transport', 'test_packed_json', TestPackedJson)
+    unittest.main()
