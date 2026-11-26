@@ -26,7 +26,7 @@
 import json
 
 from json_msgs import msg as json_msg
-from jsonschema import validate, ValidationError
+from jsonschema import validate
 
 
 def pack(data):
